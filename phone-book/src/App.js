@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import PhonebookInsert from "./components/PhonebookInsert";
 import Phonebooklist from "./components/Phonebooklist";
 import PhonebookListDetail from "./components/PhonebookListDetail";
@@ -27,17 +28,8 @@ function App() {
       number: "010-2222-1033",
     },
   ]);
-  const [DetailInfo, setdetailInfo] = useState({
-    name: "",
-    number: "",
-  });
 
   const nextId = useRef(5);
-
-  function renderDetail(id) {
-    let result = phonenumber.find((item) => item.id === id);
-    setdetailInfo({ name: result.name, number: result.number });
-  }
 
   function onInsert(info) {
     const newInfo = {
@@ -49,28 +41,51 @@ function App() {
     nextId.current++;
   }
 
-  function onRemove(name) {
-    setPhonenumber(phonenumber.filter((item) => item.name !== name));
-    setdetailInfo({
-      name: "",
-      number: "",
-    });
+  function onRemove(id) {
+    setPhonenumber(phonenumber.filter((item) => item.id !== id));
   }
 
-  //소문자로 해도 검색되게 .tolowercase 사용
+  function editedInfoInsert(editedInfo) {
+    setPhonenumber(
+      phonenumber.map((item) =>
+        item.id === parseInt(editedInfo.id)
+          ? { ...item, name: editedInfo.name, number: editedInfo.number }
+          : item
+      )
+    );
+  }
+
+  const findDetail = (id) => phonenumber.find((item) => item.id === id);
 
   return (
     <div className="App">
-      <PhonebookTemplate>
-        {/* <PhonebookSearch search={search} /> */}
-        <Phonebooklist renderDetail={renderDetail} phonenumber={phonenumber} />
-        <PhonebookListDetail
-          onRemove={onRemove}
-          phonenumber={phonenumber}
-          DetailInfo={DetailInfo}
-        />
-        <PhonebookInsert onInsert={onInsert} />
-      </PhonebookTemplate>
+      <BrowserRouter>
+        <PhonebookTemplate>
+          <Routes>
+            <Route
+              path="/search/*"
+              element={
+                <Phonebooklist
+                  phonenumber={phonenumber}
+                  findDetail={findDetail}
+                />
+              }
+            />
+            <Route
+              path="/search/:userId"
+              element={
+                <PhonebookListDetail
+                  onRemove={onRemove}
+                  phonenumber={phonenumber}
+                  editedInfoInsert={editedInfoInsert}
+                  findDetail={findDetail}
+                />
+              }
+            />
+          </Routes>
+          <PhonebookInsert onInsert={onInsert} />
+        </PhonebookTemplate>
+      </BrowserRouter>
     </div>
   );
 }

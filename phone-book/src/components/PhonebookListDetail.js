@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 const DetailDefault = styled.div``;
@@ -12,29 +13,88 @@ const EditBlock = styled.div`
     `}
 `;
 
-const PhonebookListDetail = ({ DetailInfo, onRemove }) => {
-  const { name, number } = DetailInfo;
-  const [edit, setEdit] = useState(false);
+const EditBtn = styled.button`
+  ${({ edit }) =>
+    edit &&
+    css`
+      display: none;
+    `}
+`;
 
-  function openEditBlock() {
-    console.log(edit);
+const SaveBtn = styled.button`
+  display: none;
+  ${({ edit }) =>
+    edit &&
+    css`
+      display: inline;
+    `}
+`;
+
+const PhonebookListDetail = ({ onRemove, editedInfoInsert, findDetail }) => {
+  const [edit, setEdit] = useState(false);
+  const { userId } = useParams();
+  const user = findDetail(parseInt(userId));
+  const [editedInfo, setEditedInfo] = useState(user);
+
+  const navigate = useNavigate();
+
+  function openEditBlock(e) {
     setEdit(true);
   }
-  console.log(edit);
+
+  function onChange(e) {
+    const { id, name, value } = e.target;
+    setEditedInfo({
+      ...editedInfo,
+      id: user.id,
+      [name]: value,
+    });
+  }
+
+  function editedInfoSubmit() {
+    editedInfoInsert(editedInfo);
+    setEditedInfo("");
+  }
+
   return (
     <div>
       <h2>Detail information</h2>
       <DetailDefault>
-        <p>{name}</p>
-        <p>{number}</p>
+        <p>{user.name}</p>
+        <p>{user.number}</p>
       </DetailDefault>
       <EditBlock edit={edit}>
-        <input defaultValue={name} />
+        <input
+          name="name"
+          id={user.id}
+          onChange={onChange}
+          value={editedInfo.name}
+        />
         <br />
-        <input type="tel" defaultValue={number} />
+        <input
+          type="tel"
+          name="number"
+          id={user.id}
+          onChange={onChange}
+          value={editedInfo.number}
+        />
       </EditBlock>
-      <button onClick={openEditBlock}>edit</button>
-      <button onClick={() => onRemove(name)}>remove</button>
+      <EditBtn id="editBtn" onClick={openEditBlock} edit={edit}>
+        edit
+      </EditBtn>
+      <SaveBtn edit={edit} onClick={() => editedInfoSubmit()}>
+        save
+      </SaveBtn>
+      <button
+        onClick={() => {
+          onRemove(user.id);
+          navigate("/search");
+        }}
+      >
+        remove
+      </button>
+      <br />
+      <button onClick={() => navigate("/search")}>돌아가기</button>
     </div>
   );
 };

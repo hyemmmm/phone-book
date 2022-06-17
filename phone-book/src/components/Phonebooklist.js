@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import PhonebooklistItem from "./PhonebooklistItem";
 
-const Phonebooklist = ({ renderDetail, phonenumber, search }) => {
+const Phonebooklist = ({ phonenumber, findDetail }) => {
   const [searchinput, setSearchinput] = useState("");
 
   function onChange(e) {
@@ -23,12 +24,13 @@ const Phonebooklist = ({ renderDetail, phonenumber, search }) => {
         onChange={onChange}
         value={searchinput}
       />
+
       {filtered.map((item) => (
         <PhonebooklistItem
           key={item.id}
           item={item}
-          renderDetail={renderDetail}
-        />
+          findDetail={findDetail}
+        ></PhonebooklistItem>
       ))}
     </div>
   );

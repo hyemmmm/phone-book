@@ -1,14 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Detail = styled.div`
   cursor: pointer;
 `;
 
-const PhonebooklistItem = ({ renderDetail, item }) => {
+const PhonebooklistItem = ({ item, findDetail }) => {
   return (
     <>
-      <Detail onClick={() => renderDetail(item.id)}>{item.name}</Detail>
+      <Detail onClick={() => findDetail(item.id)}>
+        <Link to={`/search/${item.id}`}>{item.name}</Link>
+      </Detail>
     </>
   );
 };
