@@ -10,7 +10,7 @@ import { reducer } from "./contact";
 import { Provider } from "react-redux";
 
 const rootReducer = combineReducers({
-  contactReducer: reducer,
+  contact: reducer,
 });
 
 const store = configureStore({

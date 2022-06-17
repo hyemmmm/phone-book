@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { create } from "../contact";
 
-const PhonebookInsert = ({ onInsert }) => {
+const PhonebookInsert = ({ onInsert, createUser }) => {
   const [input, setInput] = useState({
     name: "",
-    number: "",
+    phoneNum: "",
   });
 
   function onChange(e) {
@@ -12,11 +13,15 @@ const PhonebookInsert = ({ onInsert }) => {
   }
 
   function onSubmit(e) {
-    onInsert(input);
-    setInput({ name: "", number: "" });
+    createUser(input);
     e.preventDefault();
+    setInput({
+      name: "",
+      phoneNum: "",
+    });
   }
 
+  console.log();
   return (
     <form onSubmit={onSubmit}>
       <h2>Create new user</h2>
@@ -29,8 +34,8 @@ const PhonebookInsert = ({ onInsert }) => {
       <input
         type="tel"
         placeholder="phonenumber"
-        value={input.number}
-        name="number"
+        value={input.phoneNum}
+        name="phoneNum"
         onChange={onChange}
       />
       <br />

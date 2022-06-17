@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PhonebooklistItem from "./PhonebooklistItem";
 
-const Phonebooklist = ({ phonenumber, findDetail }) => {
+const Phonebooklist = ({ userList }) => {
   const [searchinput, setSearchinput] = useState("");
 
   function onChange(e) {
@@ -11,7 +11,7 @@ const Phonebooklist = ({ phonenumber, findDetail }) => {
 
   const lowerinput = searchinput.toLowerCase();
 
-  const filtered = phonenumber.filter((item) => {
+  const filtered = userList.filter((item) => {
     const lowerName = item.name.toLowerCase();
     return lowerName.includes(lowerinput);
   });
@@ -26,11 +26,7 @@ const Phonebooklist = ({ phonenumber, findDetail }) => {
       />
 
       {filtered.map((item) => (
-        <PhonebooklistItem
-          key={item.id}
-          item={item}
-          findDetail={findDetail}
-        ></PhonebooklistItem>
+        <PhonebooklistItem key={item.id} item={item}></PhonebooklistItem>
       ))}
     </div>
   );

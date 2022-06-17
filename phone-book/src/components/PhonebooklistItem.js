@@ -10,7 +10,7 @@ const PhonebooklistItem = ({ item, findDetail }) => {
   return (
     <>
       <Detail onClick={() => findDetail(item.id)}>
-        <Link to={`/search/${item.id}`}>{item.name}</Link>
+        {/* <Link to={`/search/${item.id}`}>{item.name}</Link> */}
       </Detail>
     </>
   );
